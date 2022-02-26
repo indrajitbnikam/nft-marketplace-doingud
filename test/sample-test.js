@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const { ethers } = require('hardhat');
 
 describe('NFTMarket', function () {
-  it('Should create and execute sales', async function () {
+  it('Should create and execute sales.', async function () {
     const Market = await ethers.getContractFactory('MyNFTMarket');
     const market = await Market.deploy();
     await market.deployed();
