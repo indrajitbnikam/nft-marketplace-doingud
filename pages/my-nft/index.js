@@ -82,7 +82,11 @@ export default function MyNFT() {
               key={nft.tokenId}
               className='flex flex-col border shadow rounded-xl overflow-hidden'
             >
-              <img src={nft.image} alt={nft.name} />
+              <img
+                src={nft.image}
+                alt={nft.name}
+                style={{ maxHeight: '300px' }}
+              />
               <div className='p-4 flex flex-col gap-4'>
                 <p className='h-8 text-2xl font-semibold'>{nft.name}</p>
                 <p className='line-clamp-2'>{nft.description}</p>
