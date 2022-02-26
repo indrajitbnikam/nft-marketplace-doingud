@@ -1,0 +1,34 @@
+.progress {
+  width: 100%;
+  height: 6px;
+  background: #e1e4e8;
+  border-radius: 3px;
+  overflow: hidden;
+
+  .progress-bar {
+    display: block;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(
+      90deg,
+      #eee,
+      #eee 17%,
+      #eee 34%,
+      #6366f1 51%,
+      #eee 68%,
+      #eee 85%,
+      #eee
+    );
+    background-size: 300% 100%;
+    animation: progress-animation 2s linear infinite;
+  }
+}
+
+@keyframes progress-animation {
+  from {
+    background-position: 100%;
+  }
+  to {
+    background-position: 0;
+  }
+}

@@ -13,10 +13,12 @@ import NFTMarket from '../artifacts/contracts/NFTMarket.sol/MyNFTMarket.json';
 // Config
 import { marketAddress, nftAddress } from '../src/config';
 import NoData from '../src/components/no-data';
+import Modal from '../src/components/loader-modal';
 
 export default function Home() {
   const [nfts, setNfts] = useState([]);
   const [loadingStatus, setLoadingStatus] = useState('not-loaded');
+  const [purchasing, setPurchasing] = useState(false);
 
   useEffect(() => {
     loadNFTs();
@@ -62,28 +64,35 @@ export default function Home() {
   };
 
   const buyNFT = async (nft) => {
-    const web3modal = new Web3Modal();
-    const connection = await web3modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
+    setPurchasing(true);
+    try {
+      const web3modal = new Web3Modal();
+      const connection = await web3modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
 
-    const signer = provider.getSigner();
-    const marketContract = new ethers.Contract(
-      marketAddress,
-      NFTMarket.abi,
-      signer
-    );
+      const signer = provider.getSigner();
+      const marketContract = new ethers.Contract(
+        marketAddress,
+        NFTMarket.abi,
+        signer
+      );
 
-    const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
-    const transaction = await marketContract.createMarketSale(
-      nftAddress,
-      nft.tokenId,
-      {
-        value: price,
-      }
-    );
+      const price = ethers.utils.parseUnits(nft.price.toString(), 'ether');
+      const transaction = await marketContract.createMarketSale(
+        nftAddress,
+        nft.tokenId,
+        {
+          value: price,
+        }
+      );
 
-    await transaction.wait();
-    loadNFTs();
+      await transaction.wait();
+      loadNFTs();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setPurchasing(false);
+    }
   };
 
   const renderNFTs = () => {
@@ -137,6 +146,14 @@ export default function Home() {
       </Head>
 
       {renderNFTs()}
+
+      {purchasing && (
+        <Modal
+          title='Purchasing NFT'
+          loading={true}
+          description='You will be prompted to authorize 1 transactions.'
+        />
+      )}
     </>
   );
 }

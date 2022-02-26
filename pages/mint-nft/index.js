@@ -9,10 +9,12 @@ import { marketAddress, nftAddress } from '../../src/config';
 // ABIs
 import NFT from '../../artifacts/contracts/NFT.sol/MyNFT.json';
 import NFTMarket from '../../artifacts/contracts/NFTMarket.sol/MyNFTMarket.json';
+import Modal from '../../src/components/loader-modal';
 
 const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0');
 
 export default function MintNFT() {
+  const [processingMinting, setProcessingMinting] = useState(false);
   const [fileUrl, setFileUrl] = useState(null);
   const [formInput, updateFormInput] = useState({
     price: '',
@@ -45,13 +47,16 @@ export default function MintNFT() {
       image: fileUrl,
     });
 
+    setProcessingMinting(true);
     try {
       const uploadedNFTData = await client.add(data);
       const url = `https://ipfs.infura.io/ipfs/${uploadedNFTData.path}`;
 
-      createSale(url);
+      await createSale(url);
     } catch (error) {
       console.error(error.message);
+    } finally {
+      setProcessingMinting(false);
     }
   };
 
@@ -135,6 +140,14 @@ export default function MintNFT() {
           </button>
         </div>
       </div>
+
+      {processingMinting && (
+        <Modal
+          title='Minting New NFT'
+          loading={true}
+          description='You will be prompted to authorize 2 transactions.'
+        />
+      )}
     </>
   );
 }
