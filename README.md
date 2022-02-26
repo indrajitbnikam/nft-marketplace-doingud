@@ -2,13 +2,13 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 Pre-requisite (for local development):
-replace provider initialization line in `/pages/index.js` file by this,
-```javascript
-const provider = new ethers.providers.JsonRpcProvider();
-```
-
+1. make sure that you are using Rinkeby network. Or change necessary configuration in `hardhat.config.js` file.
+2. create `.secret` file at the root dir. and paste private key of your test metamask account(it should have some balance).
+3. replace provider initialization line in `/pages/index.js` file by this,
+    ```javascript
+    const provider = new ethers.providers.JsonRpcProvider();
+    ```
 Then, run following commands on different terminals:
-
 Terminal 1:
 ```bash
 npx hardhat node
